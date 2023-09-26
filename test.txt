@@ -2,4 +2,10 @@ Hi every one
 this is foe only checking
 bot have any issue
 so cool
+<<<<<<< HEAD
 ok no problem we can check and update
+=======
+ok now u can ckeck and update
+>>>>>>> b5cf47108140a745a416505f045c69b012faaeb1
+have any problem 
+when u find firstly inform me 
