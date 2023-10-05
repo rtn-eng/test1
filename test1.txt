@@ -1,0 +1,218 @@
+
+ubuntu@Ubuntu:~/test1$ cat Dockerfile
+FROM tomcat:8-jdk8-corretto
+COPY target/test1*.war /usr/local/tomcat/webapps/test1.war
+
+ubuntu@Ubuntu:~/test1$ docker build -t 1skn1/test1:1
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+"docker build" requires exactly 1 argument.
+See 'docker build --help'.
+
+Usage:  docker build [OPTIONS] PATH | URL | -
+
+Build an image from a Dockerfile
+
+ubuntu@Ubuntu:~/test1$ docker images
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+ubuntu@Ubuntu:~/test1$ docker build -t 1skn1/test1:1 .
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  122.4kB
+Step 1/2 : FROM tomcat:8-jdk8-corretto
+8-jdk8-corretto: Pulling from library/tomcat
+9aa850931a9d: Pull complete 
+36d192adf200: Pull complete 
+7dfd95d909a2: Pull complete 
+eed055c1f959: Pull complete 
+92987fd22a05: Pull complete 
+Digest: sha256:ed51c95be71378f2e3420cbc82f48c67acebd19389b260cda17b5057f257531b
+Status: Downloaded newer image for tomcat:8-jdk8-corretto
+ ---> 0f2ac848d3e8
+Step 2/2 : COPY target/test1*.war /usr/local/tomcat/webapps/test1.war
+COPY failed: no source files were specified
+
+ubuntu@Ubuntu:~/test1$ mvn clean package
+Command 'mvn' not found, but can be installed with:
+apt install maven
+Please ask your administrator.
+
+ubuntu@Ubuntu:~/test1$ sudo apt install maven
+[sudo] password for ubuntu: 
+ubuntu is not in the sudoers file.  This incident will be reported.
+ubuntu@Ubuntu:~/test1$ su root
+Password: 
+root@Ubuntu:/home/ubuntu/test1# sudo apt install maven
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+
+root@Ubuntu:/home/ubuntu/test1# java --version
+openjdk 11.0.20.1 2023-08-24
+OpenJDK Runtime Environment (build 11.0.20.1+1-post-Ubuntu-0ubuntu122.04)
+OpenJDK 64-Bit Server VM (build 11.0.20.1+1-post-Ubuntu-0ubuntu122.04, mixed mode, sharing)
+root@Ubuntu:/home/ubuntu/test1# mvn --version
+Apache Maven 3.6.3
+Maven home: /usr/share/maven
+Java version: 11.0.20.1, vendor: Ubuntu, runtime: /usr/lib/jvm/java-11-openjdk-amd64
+Default locale: en_IN, platform encoding: UTF-8
+OS name: "linux", version: "6.2.0-33-generic", arch: "amd64", family: "unix"
+root@Ubuntu:/home/ubuntu/test1# 
+
+mvn clean package (after create a application package )
+
+ls target/ (u can see the file and alrady build the project)
+
+docker build -t 1skn1/test1:1 . (. or $USER)
+
+docker images
+
+another server create ns install docker
+sodo docker info
+
+sudo service docker status
+
+sudo docker info
+
+sudo usermod -aG docker ububnt  (ubuntu is tha user name)
+
+docker info
+
+ls
+
+ubuntu@Ubuntu:~/test1$ docker push 1skn1/test1:1
+
+ubuntu@Ubuntu:~/test1$ docker login -u 1skn1
+Password: 
+WARNING! Your password will be stored unencrypted in /home/ubuntu/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+
+
+ubuntu@Ubuntu:~/test1$ docker push 1skn1/test1:1     (again try)
+
+
+what is dangling image?
+ANSWER--> An image which doen't have repo details .which is not tagged.
+
+
+ubuntu@Ubuntu:~/test1$ docker images
+REPOSITORY   TAG               IMAGE ID       CREATED       SIZE
+tomcat       latest            1315d7d3b242   2 days ago    426MB
+tomcat       8-jdk8-corretto   0f2ac848d3e8   12 days ago   381MB
+ubuntu@Ubuntu:~/test1$ docker rmi -f 1315d7d3b24
+Error response from daemon: conflict: unable to delete 1315d7d3b242 (cannot be forced) - image is being used by running container 422b6f28db40
+ubuntu@Ubuntu:~/test1$ 
+ubuntu@Ubuntu:~/test1$ 
+ubuntu@Ubuntu:~/test1$ docker rmi -f 0f2ac848d3e8 
+Untagged: tomcat:8-jdk8-corretto
+Untagged: tomcat@sha256:ed51c95be71378f2e3420cbc82f48c67acebd19389b260cda17b5057f257531b
+Deleted: sha256:0f2ac848d3e8880fb19e296bcc1e51761eca570ad08e0c2ff8d8ba46a710d722
+Deleted: sha256:4b8ec722f42b99e1a39b3b9c032396afbbc49760e7917de53113dbbb6840c5b7
+Deleted: sha256:279eeb713c2cae1ddd38e885d31489d64a2acb504e3ec8ecdd4bdc380c703c61
+Deleted: sha256:3df3d828509f098c0786eb9c99e6434a7fcec2e86d6ef1c449146c67247a3853
+Deleted: sha256:a2f7f970696627078ffe9de8cd89d431b2ffb85ac62c2830db82eaeccf2f6952
+Deleted: sha256:4f9883c58bf0453bbfb3182d21b34c848067040143028652d46ea3e9ee29f1d8
+ubuntu@Ubuntu:~/test1$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED      SIZE
+tomcat       latest    1315d7d3b242   2 days ago   426MB
+ubuntu@Ubuntu:~/test1$ 
+
+
+
+
+
+
+sage:  docker [OPTIONS] COMMAND
+
+A self-sufficient runtime for containers
+
+Common Commands:
+  run         Create and run a new container from an image
+  exec        Execute a command in a running container
+  ps          List containers
+  build       Build an image from a Dockerfile
+  pull        Download an image from a registry
+  push        Upload an image to a registry
+  images      List images
+  login       Log in to a registry
+  logout      Log out from a registry
+  search      Search Docker Hub for images
+  version     Show the Docker version information
+  info        Display system-wide information
+
+Management Commands:
+  builder     Manage builds
+  container   Manage containers
+  context     Manage contexts
+  image       Manage images
+  manifest    Manage Docker image manifests and manifest lists
+  network     Manage networks
+  plugin      Manage plugins
+  system      Manage Docker
+  trust       Manage trust on Docker images
+  volume      Manage volumes
+
+Swarm Commands:
+  swarm       Manage Swarm
+
+
+ommands:
+  attach      Attach local standard input, output, and error streams to a running container
+  commit      Create a new image from a container's changes
+  cp          Copy files/folders between a container and the local filesystem
+  create      Create a new container
+  diff        Inspect changes to files or directories on a container's filesystem
+  events      Get real time events from the server
+  export      Export a container's filesystem as a tar archive
+  history     Show the history of an image
+  import      Import the contents from a tarball to create a filesystem image
+  inspect     Return low-level information on Docker objects
+  kill        Kill one or more running containers
+  load        Load an image from a tar archive or STDIN
+  logs        Fetch the logs of a container
+  pause       Pause all processes within one or more containers
+  port        List port mappings or a specific mapping for the container
+  rename      Rename a container
+  restart     Restart one or more containers
+  rm          Remove one or more containers
+  rmi         Remove one or more images
+  save        Save one or more images to a tar archive (streamed to STDOUT by default)
+  start       Start one or more stopped containers
+  stats       Display a live stream of container(s) resource usage statistics
+  stop        Stop one or more running containers
+  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+  top         Display the running processes of a container
+  unpause     Unpause all processes within one or more containers
+  update      Update configuration of one or more containers
+  wait        Block until one or more containers stop, then print their exit codes
+
+Global Options:
+      --config string      Location of client config files (default "/home/ubuntu/.docker")
+  -c, --context string     Name of the context to use to connect to the daemon (overrides DOCKER_HOST env var and default
+                           context set with "docker context use")
+  -D, --debug              Enable debug mode
+  -H, --host list          Daemon socket to connect to
+  -l, --log-level string   Set the logging level ("debug", "info", "warn", "error", "fatal") (default "info")
+
+
+ --tls                Use TLS; implied by --tlsverify
+      --tlscacert string   Trust certs signed only by this CA (default "/home/ubuntu/.docker/ca.pem")
+      --tlscert string     Path to TLS certificate file (default "/home/ubuntu/.docker/cert.pem")
+      --tlskey string      Path to TLS key file (default "/home/ubuntu/.docker/key.pem")
+      --tlsverify          Use TLS and verify the remote
+  -v, --version            Print version information and quit
+
+Run 'docker COMMAND --help' for more information on a command.
+
+For more help on how to use Docker, head to https://docs.docker.com/go/guides/
+
+
+
